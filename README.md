@@ -10,3 +10,8 @@ Finally I will push this online using the following steps:
 1. Stage changes
 2. Commit changes
 
+
+Usefull shortcuts:
+Visual Studio code: CTRL+SHIFT + P
+Browser: F5
+
