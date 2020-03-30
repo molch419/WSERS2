@@ -33,7 +33,7 @@
     } else {
 
 
-        ?>
+    ?>
         <form action="Signup.php" method="get">
             First name: <input type="text" name="FirstName" required><br>
             Last name: <input type="text" name="LastName" required><br>
@@ -43,20 +43,20 @@
 
             <select name="Country">
                 <?php
-                    $stmt = $connection->prepare("SELECT * FROM countries");
-                    $stmt->execute();
-                    $result = $stmt->get_result();
+                $stmt = $connection->prepare("SELECT * FROM countries");
+                $stmt->execute();
+                $result = $stmt->get_result();
 
-                    if ($result->num_rows > 0) {
-                        // output data of each row
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["COUNTRY_ID"] . '">' . $row["COUNTRY_NAME"] . '</option>';
-                        }
-                    } else {
-                        echo "0 results";
+                if ($result->num_rows > 0) {
+                    // output data of each row
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["COUNTRY_ID"] . '">' . $row["COUNTRY_NAME"] . '</option>';
                     }
-                    $connection->close();
-                    ?>
+                } else {
+                    echo "0 results";
+                }
+                $connection->close();
+                ?>
             </select>
             <br>
             <input type="submit" name="Register" value="Register">

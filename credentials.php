@@ -2,5 +2,4 @@
 $servername ="localhost";
 $username = "root";
 $password = "";
-$database = "dan";
-?>
+$database = "mollinger";
