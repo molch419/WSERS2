@@ -1,0 +1,71 @@
+<html>
+
+<body>
+    <?php
+    include_once("credentials.php");
+    // Create connection
+    $connection = mysqli_connect($servername, $username, $password, $database);
+    // Check connection
+    if (!$connection) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+    if (
+        isset($_GET["FirstName"]) &&
+        isset($_GET["LastName"]) &&
+        isset($_GET["Username"]) &&
+        isset($_GET["Password"])
+    ) {
+        print "You are about to be registered<br>";
+        $isUserThere = $connection->prepare("SELECT * FROM ppl WHERE UserName=?");
+        $isUserThere->bind_param("s", $_GET["Username"]);
+        $isUserThere->execute();
+
+        $result = $isUserThere->get_result();
+        if ($result->num_rows > 0) {
+            print "The username you typed has already been taken ! Please try another one <br>";
+        } else {
+
+            $stmt = $connection->prepare("INSERT INTO ppl(First_Name,Second_Name,Age,UserName,Password,Nationality) VALUES(?,?,?,?,?,?)");
+
+            $hashedPassword = password_hash($_GET["Password"], PASSWORD_BCRYPT);
+
+            $stmt->bind_param("ssissi", $_GET["FirstName"], $_GET["LastName"], $_GET["Age"], $_GET["Username"],$hashedPassword, $_GET["Country"]);
+            $stmt->execute();
+            print "You have been registered. Check the database <br>";
+            ?><a href="login.php">Go To the login page</a><?php
+        }
+    } else {
+
+        ?>
+        <form action="signup.php" method="get">
+            First name: <input type="text" name="FirstName" required><br>
+            Last name: <input type="text" name="LastName" required><br>
+            Age: <input type="text" name="Age"><br>
+            UserName: <input type="text" name="Username" required><br>
+            Password: <input type="password" name="Password" required><br>
+
+            <select name="Country">
+                <?php
+                    $stmt = $connection->prepare("SELECT * FROM countries");
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+
+                    if ($result->num_rows > 0) {
+                        // output data of each row
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["COUNTRY_ID"] . '">' . $row["COUNTRY_NAME"] . '</option>';
+                        }
+                    } else {
+                        echo "0 results";
+                    }
+                    $connection->close();
+                    ?>
+            </select>
+            <br>
+            <input type="submit" name="Register" value="Register">
+        </form>
+    <?php } ?>
+
+</body>
+
+</html>
